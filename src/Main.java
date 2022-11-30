@@ -121,6 +121,11 @@ public class Main {
 		Object isFinal;
 
 		ArrayList<String> tape = new ArrayList<String>();
+		ArrayList<String> tapeTwo1 = new ArrayList<String>();
+		ArrayList<String> tapeTwo2 = new ArrayList<String>();
+
+		long inicio;
+		long fim;
 
 		try {
 			File file = new File("./src/turingMachineOneTape.jff");
@@ -193,8 +198,11 @@ public class Main {
 		int indiceAuxFrom = 0;
 //        int indiceAuxTo = 1;
 
-		// preencher fita
+		System.out.println("UMA FITA:");
+		inicio = System.currentTimeMillis();
+
 		int indiceFita = 0;
+		// preencher fita
 		tape.add("B");
 		for (int i = 0; i < respUsuario.length(); i++) {
 			tape.add(Character.toString(respUsuario.charAt(i)));
@@ -205,7 +213,7 @@ public class Main {
 
 			ArrayList<Edge> edges = grafo.getEdges(indiceAuxFrom);
 			aux = false;
-			
+
 			if (grafo.hasVertex(indiceAuxFrom)) {
 
 				String caractere = tape.get(indiceFita);
@@ -224,17 +232,17 @@ public class Main {
 							indiceFita--;
 						}
 
-						for (int i = 0; i < tape.size(); i++) {
-							System.out.print(tape.get(i) + " ");
-						}
-						System.out.println();
+//						for (int i = 0; i < tape.size(); i++) {
+//							System.out.print(tape.get(i) + " ");
+//						}
+//						System.out.println();
 					}
 				}
 
 			} else {
 				valido = false;
 			}
-			
+
 			if (aux == false) {
 				break;
 			}
@@ -252,5 +260,78 @@ public class Main {
 			System.out.println("Expressão não válida");
 		}
 
+		fim = System.currentTimeMillis();
+
+		System.out.println("Tempo: " + (fim - inicio) + " ms");
+
+		System.out.println();
+		System.out.println("DUAS FITAS:");
+		inicio = System.currentTimeMillis();
+
+		aux = true;
+		valido = true;
+		indiceAuxFrom = 0;
+
+		indiceFita = 0;
+
+		tapeTwo1.add("B");
+		for (int i = 0; i < respUsuario.length(); i++) {
+			tapeTwo1.add(Character.toString(respUsuario.charAt(i)));
+		}
+		tapeTwo1.add("B");
+
+		for (int i = 0; i < tapeTwo1.size(); i++) {
+			tapeTwo2.add(tapeTwo1.get(i));
+		}
+
+		while (tapeTwo2.size() != indiceFita) {
+
+			ArrayList<Edge> edges = grafo.getEdges(indiceAuxFrom);
+			aux = false;
+
+			if (grafo.hasVertex(indiceAuxFrom)) {
+
+				String caractere = tapeTwo2.get(indiceFita);
+				for (int j = 0; j < edges.size(); j++) {
+					if (edges.get(j).read.equals(caractere)) {
+						aux = true;
+
+						indiceAuxFrom = edges.get(j).destino;
+
+						tapeTwo2.set(indiceFita, edges.get(j).write);
+
+						if (edges.get(j).move.equals("R")) {
+							indiceFita++;
+						} else if (edges.get(j).move.equals("L")) {
+							indiceFita--;
+						}
+
+					}
+				}
+
+			} else {
+				valido = false;
+			}
+
+			if (aux == false) {
+				break;
+			}
+
+		}
+
+//		for (int i = 0; i < tape.size(); i++) {
+//			System.out.print(tape.get(i) + " ");
+//		}
+//		System.out.println();
+
+		if (valido && grafo.isQFinal(indiceAuxFrom)) {
+			System.out.println("Expressão válida");
+		} else {
+			System.out.println("Expressão não válida");
+		}
+
+		fim = System.currentTimeMillis();
+
+		System.out.println("Tempo: " + (fim - inicio) + " ms");
 	}
 }
